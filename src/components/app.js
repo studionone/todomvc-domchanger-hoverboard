@@ -7,16 +7,30 @@ function App(emit, refresh) {
     return { render: render };
 
     function render(items) {
-        return ['div', 
+        return ['div',
             ['h3', 'Todo'],
-            [TodoList, items],
+
+            // Todo list component
+            items.length > 0
+                ? [TodoList, items]
+                : ['p', 'No todos!'],
+
+            // Form to create new item
             ['form', { onsubmit: addItem },
                 ['input', {
-                    onchange: onChange,
+                    onkeyup: onChange,
                     value: text
                 }],
                 ['button', 'Add']
-            ]
+            ],
+
+            // Clear completion
+            ['p',
+                ['a', {
+                    href: '#',
+                    onclick: clearCompleted
+                }, 'Clear completed tasks']
+            ],
         ];
     }
 
@@ -26,9 +40,15 @@ function App(emit, refresh) {
 
     function addItem(ev) {
         ev.preventDefault();
-       
+
         TodoStore.addTodo(text);
         text = "";
+        refresh();
+    }
+
+    function clearCompleted(ev) {
+        ev.preventDefault();
+        TodoStore.clearCompleted();
         refresh();
     }
 }

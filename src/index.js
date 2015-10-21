@@ -1,16 +1,14 @@
-var $ = window.$ = require('domtastic');
 var domChanger = require('domchanger');
 
-// Components
+// Components and stores
+var TodoStore = require('./stores/todos');
 var App = require('./components/app');
 
-// Flux
-var TodoStore = require('./stores/todos');
-
 // Instantiate the top-level app component
-var instance = domChanger(App, $('#app').get(0));
+var instance = domChanger(App, document.querySelector('#app'));
 
 // Wire the store into the app
 var unsubscribe = TodoStore.getState(function(state) {
+    console.log(state);
     instance.update(state.todos);
 });

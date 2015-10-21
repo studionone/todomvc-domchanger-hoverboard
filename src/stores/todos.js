@@ -1,10 +1,9 @@
 var Hoverboard = require('hoverboard');
 
-// Hoverboard store
-var TodoStore = {
+var TodoStore = Hoverboard({
     getInitialState: function() {
         return {
-            todos: [{text: 'Hello world', done: false}]
+            todos: []
         };
     },
 
@@ -26,7 +25,7 @@ var TodoStore = {
 
     onToggleCompletion: function(index) {
         var newTodos = this.state.todos.slice(0);
-        
+
         if (index in newTodos === false) {
             return false;
         }
@@ -39,11 +38,17 @@ var TodoStore = {
 
         this.setState({ todos: newTodos });
     },
-};
 
-// Make it a singleton and accesible everywhere
-if ('TodoStore' in window === false) {
-    window.TodoStore = Hoverboard(TodoStore);
-}
+    onClearCompleted: function() {
+        var originalTodos = this.state.todos.slice(0);
+        var newTodos = originalTodos.filter(function(item) {
+            return !item.done;
+        });
 
-module.exports = window.TodoStore;
+        console.log(newTodos);
+
+        this.setState({ todos: newTodos });
+    },
+});
+
+module.exports = TodoStore;
