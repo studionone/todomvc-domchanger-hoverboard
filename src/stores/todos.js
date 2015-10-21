@@ -3,7 +3,8 @@ var Hoverboard = require('hoverboard');
 var TodoStore = Hoverboard({
     getInitialState: function() {
         return {
-            todos: []
+            text: '',
+            todos: [],
         };
     },
 
@@ -12,15 +13,15 @@ var TodoStore = Hoverboard({
         return JSON.parse(JSON.stringify(state));
     },
 
-    onAddTodo: function(text) {
+    onAddTodo: function() {
         var newTodos = this.state.todos.slice(0);
 
         newTodos.push({
-            text: text,
+            text: this.state.text,
             done: false
         });
 
-        this.setState({ todos: newTodos });
+        this.setState({ text: '', todos: newTodos });
     },
 
     onToggleCompletion: function(index) {
@@ -45,9 +46,14 @@ var TodoStore = Hoverboard({
             return !item.done;
         });
 
-        console.log(newTodos);
-
         this.setState({ todos: newTodos });
+    },
+
+    onUpdateText: function(ev) {
+        var newState = JSON.parse(JSON.stringify(this.state));
+        newState.text = ev.target.value;
+
+        this.setState(newState);
     },
 });
 

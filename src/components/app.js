@@ -2,24 +2,22 @@ var TodoList = require('./todo-list');
 var TodoStore = require('../stores/todos');
 
 function App(emit, refresh) {
-    var text = "";
-
     return { render: render };
 
-    function render(items) {
+    function render(store) {
         return ['div',
             ['h3', 'Todo'],
 
             // Todo list component
-            items.length > 0
-                ? [TodoList, items]
+            store.todos.length > 0
+                ? [TodoList, store.todos]
                 : ['p', 'No todos!'],
 
             // Form to create new item
             ['form', { onsubmit: addItem },
                 ['input', {
-                    onkeyup: onChange,
-                    value: text
+                    onkeyup: TodoStore.updateText,
+                    value: store.text
                 }],
                 ['button', 'Add']
             ],
@@ -34,22 +32,14 @@ function App(emit, refresh) {
         ];
     }
 
-    function onChange(ev) {
-        text = ev.target.value;
-    }
-
     function addItem(ev) {
         ev.preventDefault();
-
-        TodoStore.addTodo(text);
-        text = "";
-        refresh();
+        TodoStore.addTodo();
     }
 
     function clearCompleted(ev) {
         ev.preventDefault();
         TodoStore.clearCompleted();
-        refresh();
     }
 }
 
