@@ -4,7 +4,8 @@ function TodoList() {
     return { render: render }
 
     function render(items) {
-        return ['ul', items.map(function(item, index) {
+        return ['ul',
+            items.map(function(item, index) {
                 return ['li', {
                     'onclick': toggleComplete,
                     'data-index': index
