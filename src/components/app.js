@@ -1,4 +1,5 @@
 var TodoList = require('./todo-list');
+var Footer = require('./footer');
 var TodoStore = require('../stores/todos');
 
 function App(emit, refresh) {
@@ -6,29 +7,37 @@ function App(emit, refresh) {
 
     function render(store) {
         return ['div',
-            ['h3', 'Todo'],
-
-            // Todo list component
-            store.todos.length > 0
-                ? [TodoList, store.todos]
-                : ['p', 'No todos!'],
-
-            // Form to create new item
-            ['form', { onsubmit: addItem },
+            ['header', { 'class': 'header' },
+                ['h1', 'todos'],
+                // Form to create new item
+                ['form', { onsubmit: addItem },
+                    ['input', {
+                        'class': 'new-todo',
+                        'placeholder': 'What needs to be done?',
+                        'onkeyup': TodoStore.updateText,
+                        'value': store.text,
+                        'autofocus': '',
+                    }],
+                ]
+            ],
+            ['section', { 'class': 'main' },
+                // Clear completion
                 ['input', {
-                    onkeyup: TodoStore.updateText,
-                    value: store.text
+                    'onclick': clearCompleted,
+                    'class': 'toggle-all',
+                    'type': 'checkbox',
+                    'checked': hasCompleted(store.todos) ? 'checked' : false,
                 }],
-                ['button', 'Add']
-            ],
+                ['label', { 'for': 'toggle-all' }, 'Mark all as complete'],
 
-            // Clear completion
-            ['p',
-                ['a', {
-                    href: '#',
-                    onclick: clearCompleted
-                }, 'Clear completed tasks']
-            ],
+                // Todo list component
+                store.todos.length > 0
+                    ? [TodoList, store.todos] : [],
+
+                // Footer
+                store.todos.length > 0
+                    ? [Footer, store.todos] : [],
+            ]
         ];
     }
 
@@ -40,6 +49,18 @@ function App(emit, refresh) {
     function clearCompleted(ev) {
         ev.preventDefault();
         TodoStore.clearCompleted();
+    }
+
+    function hasCompleted(todos) {
+        return todos.some(function(item) {
+            if (item.done === true) {
+                // This lets us refresh the view after the result has been returned
+                setTimeout(refresh, 0);
+                return true;
+            }
+
+            return false;
+        });
     }
 }
 

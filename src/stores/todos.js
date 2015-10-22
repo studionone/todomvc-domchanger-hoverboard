@@ -16,6 +16,11 @@ var TodoStore = Hoverboard({
     onAddTodo: function() {
         var newTodos = this.state.todos.slice(0);
 
+        if (typeof this.state.text === 'undefined'
+        || this.state.text.length < 1) {
+            return;
+        }
+
         newTodos.push({
             text: this.state.text,
             done: false
@@ -54,6 +59,17 @@ var TodoStore = Hoverboard({
         newState.text = ev.target.value;
 
         this.setState(newState);
+    },
+
+    onHandleDelete: function(index) {
+        var newTodos = this.state.todos.slice(0);
+        newTodos.splice(index, 1);
+
+        console.log(newTodos);
+
+
+
+        this.setState({ todos: newTodos });
     },
 });
 

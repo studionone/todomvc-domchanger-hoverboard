@@ -1,20 +1,34 @@
 var TodoStore = require('../stores/todos');
 
-function TodoList() {
+function TodoList(emit, refresh) {
     return { render: render }
 
     function render(items) {
-        return ['ul',
+        return ['ul', { 'class': 'todo-list' },
             items.map(function(item, index) {
                 return ['li', {
-                    'onclick': toggleComplete,
-                    'data-index': index
-                }, item.done ? ['del', item.text] : ['span', item.text]]
+                    'class': item.done ? 'completed' : '',
+                    },
+                ['div', {'class': 'view'},
+                    ['input', {
+                        'class': 'toggle',
+                        'type': 'checkbox',
+                        'checked': item.done ? 'checked' : false,
+                        'onchange': function(ev) {
+                            ev.preventDefault();
+                            TodoStore.toggleCompletion(index);
+                        },
+                    }],
+                    ['label', item.text],
+                    ['button', {
+                        'class': 'destroy',
+                        'onclick': function(ev) {
+                            ev.preventDefault();
+                            TodoStore.handleDelete(index);
+                        },
+                    }]],
+                ['input', { 'class': 'edit'}]]
             })];
-    }
-
-    function toggleComplete(ev) {
-        TodoStore.toggleCompletion(ev.target.parentNode.dataset.index);
     }
 }
 
