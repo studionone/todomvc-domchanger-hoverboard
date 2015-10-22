@@ -1,6 +1,6 @@
 # domChanger &amp; Hoverboard Todo list
-- [domChanger]() is a tiny DOM-diffing reactive view library, similar in concept to React
-- [Hoverboard]() is a tiny Flux implementation
+- [domChanger](https://github.com/creationix/domchanger) is a tiny DOM-diffing reactive view library, similar in concept to React
+- [Hoverboard](https://github.com/jesseskinner/hoverboard/tree/v1.5.0) is a tiny Flux implementation
 
 ## Installation
 1. Clone this repository
